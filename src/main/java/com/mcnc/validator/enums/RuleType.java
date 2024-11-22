@@ -1,20 +1,26 @@
 package com.mcnc.validator.enums;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public enum RuleType {
 
+	VALID("valid", Valid.class),
+	NOTNULL("notnull", NotNull.class),
+	NOTEMPTY("notempty", NotEmpty.class),
 	SIZE("size", Size.class),
 	MIN("min", Min.class),
 	MAX("max", Max.class),
-	PATTERN("pattern", Pattern.class),
-	NOTEMPTY("notempty", NotEmpty.class),
-	NOTNULL("notnull", NotNull.class);
+	DECIMALMIN("decimalmin", DecimalMin.class),
+	DECIMALMAX("decimalmax", DecimalMax.class),
+	PATTERN("pattern", Pattern.class);
 
 	String value;
 	Class<?> type;

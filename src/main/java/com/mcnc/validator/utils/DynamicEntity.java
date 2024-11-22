@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mcnc.validator.enums.DataType;
+import com.mcnc.validator.enums.RuleType;
 import com.mcnc.validator.model.Property;
 import com.mcnc.validator.model.ValidationRule;
 
@@ -113,46 +114,46 @@ public class DynamicEntity {
 	}
 
 	private static Optional<?> applyValidationRule(Optional<?> fieldBuilder, ValidationRule rule) {
-		switch (rule.getRuleType().toLowerCase()) {
-			case "valid":
+		switch (RuleType.ruleTypeOf(rule.getRuleType().toLowerCase())) {
+			case RuleType.VALID:
 				return fieldBuilder.annotateField(AnnotationDescription.Builder.ofType(Valid.class)
 						.build());
-			case "notnull":
+			case RuleType.NOTNULL:
 				return fieldBuilder.annotateField(AnnotationDescription.Builder.ofType(NotNull.class)
 						.define("message", rule.getErrorMessage())
 						.build());
-			case "notempty":
+			case RuleType.NOTEMPTY:
 				return fieldBuilder.annotateField(AnnotationDescription.Builder.ofType(NotEmpty.class)
 						.define("message", rule.getErrorMessage())
 						.build());
-			case "pattern":
+			case RuleType.PATTERN:
 				return fieldBuilder.annotateField(AnnotationDescription.Builder.ofType(Pattern.class)
 						.define("regexp", rule.getRuleValue())
 						.define("message", rule.getErrorMessage())
 						.build());
-			case "decimalmin":
+			case RuleType.DECIMALMIN:
 				return fieldBuilder.annotateField(AnnotationDescription.Builder.ofType(DecimalMin.class)
 						.define("value", rule.getRuleValue())
 						.define("message", rule.getErrorMessage())
 						.build());
-			case "decimalmax":
+			case RuleType.DECIMALMAX:
 				return fieldBuilder.annotateField(AnnotationDescription.Builder.ofType(DecimalMax.class)
 						.define("value", rule.getRuleValue())
 						.define("message", rule.getErrorMessage())
 						.build());
-			case "size":
+			case RuleType.SIZE:
 				String[] sizeRange = rule.getRuleValue().split(",");
 				return fieldBuilder.annotateField(AnnotationDescription.Builder.ofType(Size.class)
 						.define("min", Integer.parseInt(sizeRange[0].trim()))
 						.define("max", Integer.parseInt(sizeRange[1].trim()))
 						.define("message", rule.getErrorMessage())
 						.build());
-			case "min":
+			case RuleType.MIN:
 				return fieldBuilder.annotateField(AnnotationDescription.Builder.ofType(Min.class)
 						.define("min", rule.getRuleValue())
 						.define("message", rule.getErrorMessage())
 						.build());
-			case "max":
+			case RuleType.MAX:
 				return fieldBuilder.annotateField(AnnotationDescription.Builder.ofType(Max.class)
 						.define("min", rule.getRuleValue())
 						.define("message", rule.getErrorMessage())
