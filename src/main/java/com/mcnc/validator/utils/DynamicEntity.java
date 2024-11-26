@@ -19,6 +19,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.annotation.AnnotationDescription;
 import net.bytebuddy.description.type.TypeDescription;
@@ -29,6 +30,7 @@ import net.bytebuddy.dynamic.DynamicType.Builder.FieldDefinition.Optional;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.implementation.FieldAccessor;
 
+@Slf4j
 public class DynamicEntity {
 
 	private static final Map<String, Class<?>> classesLoaded = new HashMap<>();
@@ -79,7 +81,7 @@ public class DynamicEntity {
 
 			// Add validation annotations based on the metadata
 			if (Boolean.TRUE.equals(property.isRequired())) {
-				builder = DynamicEntity.addAnnotationValidateField(fieldBuilder, property);
+				builder = DynamicEntity.addAnnotationValidateField(fieldBuilder, property.getValidationRules());
 			}
 
 		}
@@ -93,6 +95,8 @@ public class DynamicEntity {
 		// Cache the loaded class
 		classesLoaded.put(className, dynamicClass);
 
+		log.info(className + " loaded successfully.");
+
 		// Return the generated class
 		return dynamicClass;
 	}
@@ -104,9 +108,9 @@ public class DynamicEntity {
 		return fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
 	}
 
-	private static Builder<?> addAnnotationValidateField(Optional<?> fieldBuilder, Property property) {
+	private static Builder<?> addAnnotationValidateField(Optional<?> fieldBuilder, List<ValidationRule> validationRules) {
 
-		for (ValidationRule rule : property.getValidationRules()) {
+		for (ValidationRule rule : validationRules) {
 			fieldBuilder = DynamicEntity.applyValidationRule(fieldBuilder, rule);
 		}
 

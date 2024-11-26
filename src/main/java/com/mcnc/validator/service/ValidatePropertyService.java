@@ -7,9 +7,12 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mcnc.validator.model.MData;
 import com.mcnc.validator.model.Property;
+import com.mcnc.validator.model.TrCode;
 import com.mcnc.validator.model.ValidationRule;
 import com.mcnc.validator.utils.DynamicEntity;
 
@@ -67,14 +70,25 @@ public class ValidatePropertyService {
 			))
 		);
 
-		// Generate the dynamic class
-		Class<?> dynamicClass = DynamicEntity.generate(DynamicEntity.capitalize(inputData.getString("apiName")), properties);
-
 		ObjectMapper mapper = new ObjectMapper();
-		Object instance = mapper.convertValue(inputData.getMData("body"), dynamicClass);
+		mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+		TrCode trCode = mapper.convertValue(inputData.getMData("header"), TrCode.class);
 
-		// Validate the dynamic instance
-		this.validateDynamicInstance(instance);
+		// Generate the dynamic class
+		Class<?> dynamicClass = DynamicEntity.generate(DynamicEntity.capitalize(trCode.getApiName() + trCode.getUpdatedDate() + trCode.getUpdatedTime()), trCode.getProperties());
+
+		try {
+			
+			// Convert the input data to the dynamic class
+			ObjectMapper dynamicMapper = new ObjectMapper();
+			Object instance = dynamicMapper.convertValue(inputData.getMData("body"), dynamicClass);
+
+			// Validate the dynamic instance
+			this.validateDynamicInstance(instance);
+		} catch (IllegalArgumentException e) {
+			log.info(e.getMessage());
+		}
+
 	}
 
 	private void validateDynamicInstance(Object instance) {
