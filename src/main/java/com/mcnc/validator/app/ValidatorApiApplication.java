@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
+@ComponentScan("com.mcnc.validator.config")
 @ComponentScan("com.mcnc.validator.service")
 @ComponentScan("com.mcnc.validator.controller")
 public class ValidatorApiApplication {

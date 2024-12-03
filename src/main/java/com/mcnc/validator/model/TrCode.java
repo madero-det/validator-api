@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TrCode {
 	private String apiName;
+	private String messageType;
 	private String updatedDate;
 	private String updatedTime;
 	private List<Property> properties;

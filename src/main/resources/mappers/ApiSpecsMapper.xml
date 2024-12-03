@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mcnc.validator.mapper.ApiSpecsMapper">
+
+	<select id="getApiSpecsByTrCode" resultType="MData">
+		<![CDATA[
+		SELECT 
+			API_NAME AS "apiName"
+			, UPDATED_DATE AS "updatedDate"
+			, UPDATED_TIME AS "updatedTime"
+		FROM DIBAPI.API_INFORMATION
+		WHERE API_NAME = #{trCode}
+		]]>
+	</select>
+
+	<select id="getApiField" resultType="MData">
+		<![CDATA[
+		SELECT 
+			API_NAME AS "apiName"
+			, FIELD_NAME AS "fieldName"
+			, PARENT_FIELD_NAME AS "parentFieldName"
+			, DATA_TYPE AS "dataType"
+			, REQUIRED AS "required"
+		FROM DIBAPI.API_FIELD_INFORMATION
+		WHERE API_NAME = #{trCode}
+			AND PARENT_FIELD_NAME = #{parentFieldName}
+			AND MESSAGE_TYPE = #{messageType}
+		]]>
+	</select>
+
+	<select id="getValidationField" resultType="MData">
+		<![CDATA[
+		SELECT 
+			RULE_TYPE AS "ruleType"
+			, RULE_VALUE AS "ruleValue"
+			, ERROR_MESSAGE AS "errorMessage"
+		FROM DIBAPI.FIELD_VALIDATION_RULES 
+		WHERE API_NAME = #{trCode}
+			AND FIELD_NAME = #{fieldName}
+			AND MESSAGE_TYPE = #{messageType}
+		]]>
+	</select>
+
+</mapper>

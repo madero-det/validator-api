@@ -1,8 +1,5 @@
 package com.mcnc.validator.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,9 +18,9 @@ public class ValidatorApiSpecsController {
 	private final ValidatePropertyService validatePropertyService;
 
 	@PostMapping("/retrieves")
-	public List<MData> retrieveListApiSpecs(@RequestBody MData inputData) {
-		validatePropertyService.validateProperty(inputData);
-		return new ArrayList<>();
+	public MData retrieveListApiSpecs(@RequestBody MData inputData) {
+		String logId = validatePropertyService.validateProperty(inputData);
+		return logId == null ? new MData() : new MData().setString("logId", logId);
 	}
 
 }

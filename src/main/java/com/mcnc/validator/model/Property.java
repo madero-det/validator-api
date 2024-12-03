@@ -17,7 +17,6 @@ public class Property {
 	private String fieldName;
 	private String parentFieldName;
 	private String dataType;
-	private String fieldLocation;
 	private boolean isRequired;
 	private List<ValidationRule> validationRules;
 	private List<Property> childProperties;
