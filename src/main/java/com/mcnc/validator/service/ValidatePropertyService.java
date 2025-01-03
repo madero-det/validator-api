@@ -2,6 +2,8 @@ package com.mcnc.validator.service;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -55,7 +57,12 @@ public class ValidatePropertyService {
 			return this.validateDynamicInstance(instance);
 		} catch (IllegalArgumentException e) {
 			log.info(e.getMessage());
-			return e.getMessage();
+
+			String regex = "Unrecognized field\\s+\"[^\"]+\"";
+			Pattern pattern = Pattern.compile(regex);
+			Matcher matcher = pattern.matcher(e.getMessage());
+
+			return matcher.find() ? matcher.group() : "Invalid input data";
 		}
 
 	}
