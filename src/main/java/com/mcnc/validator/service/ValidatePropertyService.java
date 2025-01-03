@@ -34,13 +34,15 @@ public class ValidatePropertyService {
 			validator = factoryBean.getValidator();
 		}
 
+		// Get API specs by trCode from the database
 		MData apiSpecsByTrCode = apiSpecsService.getApiSpecsByTrCode(inputData.getMData("header"));
  
+		// Convert the API specs to a TrCode object
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
 		TrCode trCode = mapper.convertValue(apiSpecsByTrCode, TrCode.class);
 
-		// Generate the dynamic class
+		// Generate a dynamic class based on the API specs
 		Class<?> dynamicClass = DynamicEntity.generate(DynamicEntity.capitalize(trCode.getApiName() + trCode.getUpdatedDate() + trCode.getUpdatedTime() + trCode.getMessageType()), trCode.getProperties());
 
 		try {
