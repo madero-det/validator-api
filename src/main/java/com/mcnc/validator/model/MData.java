@@ -162,4 +162,14 @@ public class MData extends LinkedHashMap<String, Object> implements MDataProtoco
 	public boolean equals(Object data) {
 		return super.equals(data);
 	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return super.toString();
+	}
 }
